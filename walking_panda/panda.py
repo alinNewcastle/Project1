@@ -4,8 +4,8 @@ from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 from direct.actor.Actor import Actor
 
-class MyApp(ShowBase):
-    def __init__(self):
+class WalkingPanda(ShowBase):
+    def __init__(self, no_rotate=False):
         ShowBase.__init__(self)
 
         # Load the environment model.
