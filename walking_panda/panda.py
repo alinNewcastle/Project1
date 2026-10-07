@@ -5,11 +5,15 @@ from direct.task import Task
 from direct.actor.Actor import Actor
 
 class WalkingPanda(ShowBase):
-    def __init__(self, no_rotate=False):
+    def __init__(self, no_rotate=False, scale=1.0, rotation_speed=6.0, camera_radius=20.0, camera_height=3.0, animation_speed=1.0,):
         ShowBase.__init__(self)
 
         self.no_rotate = no_rotate
+        self.rotation_speed = rotation_speed
+        self.camera_radius = camera_radius
+        self.camera_height = camera_height
 
+        
         # Load the environment model.
         self.scene = self.loader.loadModel("models/environment")
         self.scene.reparentTo(self.render)
@@ -24,25 +28,31 @@ class WalkingPanda(ShowBase):
             "models/panda-model",
             {"walk": "models/panda-walk4"}
         )
-        self.pandaActor.setScale(0.005, 0.005, 0.005)
+        base_scale = 0.005
+        self.pandaActor.setScale(base_scale * scale, base_scale * scale, base_scale * scale)
         self.pandaActor.reparentTo(self.render)
         # Loop its animation.
+        self.pandaActor.setPlayRate(animation_speed, "walk")
         self.pandaActor.loop("walk")
 
     # Define a procedure to move the camera.
     def spinCameraTask(self, task):
         if self.no_rotate:
-            angleDegrees = task.time * 6.0
-            angleRadians = angleDegrees * (pi / 180.0)
-            self.camera.setPos(
-                20 * sin(angleRadians),
-                -20.0 * cos(angleRadians),
-                3
-            )
-            self.camera.setHpr(angleDegrees, 0, 0)
+            angleDegrees = 0.0
+        else:
+            angleDegrees = task.time * self.rotation_speed
+
+        angleRadians = angleDegrees * (pi / 180.0)
+
+        self.camera.setPos(
+            self.camera_radius * sin(angleRadians),
+            -self.camera_radius * cos(angleRadians),
+            self.camera_height,
+        )
+        self.camera.setHpr(angleDegrees, 0, 0)
 
         return Task.cont
 
 
-app = WalkingPanda(no_rotate=True)
+app = WalkingPanda(no_rotate=False, scale=2.0, rotation_speed=6.0, camera_radius=20.0, camera_height=3.0, animation_speed=1.0)
 app.run()
