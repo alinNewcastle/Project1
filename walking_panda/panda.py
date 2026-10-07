@@ -5,8 +5,13 @@ from direct.task import Task
 from direct.actor.Actor import Actor
 
 class WalkingPanda(ShowBase):
-    def __init__(self, no_rotate=False, scale=1.0, rotation_speed=6.0, camera_radius=20.0, camera_height=3.0, animation_speed=1.0,):
+    def __init__(self, no_rotate=False, scale=1.0, rotation_speed=6.0, camera_radius=20.0, camera_height=3.0, animation_speed=1.0, volume=0.3):
         ShowBase.__init__(self)
+
+        self.music = self.loader.loadSfx("Project1/sounds/music.ogg")
+        self.music.setLoop(True)
+        self.music.setVolume(volume)
+        self.music.play()
 
         self.no_rotate = no_rotate
         self.rotation_speed = rotation_speed
@@ -54,5 +59,13 @@ class WalkingPanda(ShowBase):
         return Task.cont
 
 
-app = WalkingPanda(no_rotate=False, scale=2.0, rotation_speed=6.0, camera_radius=20.0, camera_height=3.0, animation_speed=1.0)
+app = WalkingPanda(
+    no_rotate=False, 
+    scale=2.0,
+    rotation_speed=6.0,
+    camera_radius=20.0, 
+    camera_height=3.0, 
+    animation_speed=1.0,
+    volume=0.3
+)
 app.run()
